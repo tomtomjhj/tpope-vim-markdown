@@ -67,7 +67,7 @@ syn match markdownValid '&\%(#\=\w*;\)\@!' transparent contains=NONE
 syn match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock,htmlSpecialChar
 
 syn cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownListMarker,markdownOrderedListMarker,markdownCodeBlock,markdownRule
-syn cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCode,markdownEscape,@htmlTop,markdownError,markdownValid
+syn cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCode,markdownEscape,@htmlTop,markdownValid
 
 syn match markdownH1 "^.\+\n=\+$" contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
 syn match markdownH2 "^.\+\n-\+$" contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
@@ -143,7 +143,6 @@ if get(b:, 'markdown_yaml_head', get(g:, 'markdown_yaml_head', main_syntax ==# '
 endif
 
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
-syn match markdownError "\w\@<=_\w\@="
 
 hi def link markdownH1                    htmlH1
 hi def link markdownH2                    htmlH2
@@ -189,7 +188,6 @@ hi def link markdownStrikeDelimiter       markdownStrike
 hi def link markdownCodeDelimiter         Delimiter
 
 hi def link markdownEscape                Special
-hi def link markdownError                 Error
 
 let b:current_syntax = "markdown"
 if main_syntax ==# 'markdown'
