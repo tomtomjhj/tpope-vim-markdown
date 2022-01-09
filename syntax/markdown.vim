@@ -86,8 +86,8 @@ syn match markdownBlockquote ">\%(\s\|$\)" contained nextgroup=@markdownBlock
 syn region markdownCodeBlock start="^\n\( \{4,}\|\t\)" end="^\ze \{,3}\S.*$" keepend
 
 " TODO: real nesting
-syn match markdownListMarker "\%(\t\| \{0,4\}\)[-*+]\%(\s\+\S\)\@=" contained
-syn match markdownOrderedListMarker "\%(\t\| \{0,4}\)\<\d\+\.\%(\s\+\S\)\@=" contained
+syn match markdownListMarker "\s*[-*+]\%(\s\+\S\)\@=" contained
+syn match markdownOrderedListMarker "\s*\<\d\+\.\%(\s\+\S\)\@=" contained
 
 syn match markdownRule "\* *\* *\*[ *]*$" contained
 syn match markdownRule "- *- *-[ -]*$" contained
