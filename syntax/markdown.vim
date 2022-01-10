@@ -58,6 +58,7 @@ if !exists('g:markdown_minlines')
   let g:markdown_minlines = 50
 endif
 execute 'syn sync minlines=' . g:markdown_minlines
+syn sync maxlines=500
 syn sync linebreaks=1
 syn case ignore
 
