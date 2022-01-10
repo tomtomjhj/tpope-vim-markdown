@@ -31,26 +31,45 @@ if !exists("g:no_plugin_maps") && !exists("g:no_markdown_maps")
   let b:undo_ftplugin .= '|sil! nunmap <buffer> [[|sil! nunmap <buffer> ]]|sil! xunmap <buffer> [[|sil! xunmap <buffer> ]]'
 endif
 
-function! s:NotCodeBlock(lnum) abort
-  return synIDattr(synID(a:lnum, 1, 1), 'name') !=# 'markdownCode'
+function! s:IsCodeBlock(lnum) abort
+  let synstack = synstack(a:lnum, 1)
+  for i in synstack
+    if synIDattr(i, 'name') =~# '^\%(markdown\%(Code\|Highlight\|Yaml\)\|htmlComment\)'
+      return 1
+    endif
+  endfor
+  return 0
 endfunction
 
 function! MarkdownFold() abort
   let line = getline(v:lnum)
-
-  if line =~# '^#\+ ' && s:NotCodeBlock(v:lnum)
-    return ">" . match(line, ' ')
+  let hashes = matchstr(line, '^#\+')
+  let is_code = -1
+  if !empty(hashes)
+    let is_code = s:IsCodeBlock(v:lnum)
+    if !is_code
+      return ">" . len(hashes)
+    endif
   endif
-
-  let nextline = getline(v:lnum + 1)
-  if (line =~ '^.\+$') && (nextline =~ '^=\+$') && s:NotCodeBlock(v:lnum + 1)
-    return ">1"
+  if !empty(line)
+    let nextline = getline(v:lnum + 1)
+    if nextline =~ '^=\+$'
+      if is_code == -1
+        let is_code = s:IsCodeBlock(v:lnum)
+      endif
+      if !is_code
+        return ">1"
+      endif
+    endif
+    if nextline =~ '^-\+$'
+      if is_code == -1
+        let is_code = s:IsCodeBlock(v:lnum)
+      endif
+      if !is_code
+        return ">2"
+      endif
+    endif
   endif
-
-  if (line =~ '^.\+$') && (nextline =~ '^-\+$') && s:NotCodeBlock(v:lnum + 1)
-    return ">2"
-  endif
-
   return "="
 endfunction
 
