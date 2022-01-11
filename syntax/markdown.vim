@@ -25,19 +25,16 @@ if !exists('g:markdown_fenced_languages')
   let g:markdown_fenced_languages = []
 endif
 let s:done_include = {}
-for s:type in map(copy(g:markdown_fenced_languages),'matchstr(v:val,"[^=]*$")')
-  if has_key(s:done_include, matchstr(s:type,'[^.]*'))
+for s:ft in map(copy(g:markdown_fenced_languages),'matchstr(v:val,"[^=]*$")')
+  if has_key(s:done_include, s:ft)
     continue
   endif
-  if s:type =~ '\.'
-    let b:{matchstr(s:type,'[^.]*')}_subtype = matchstr(s:type,'\.\zs.*')
-  endif
   syn case match
-  exe 'syn include @markdownHighlight_'.tr(s:type,'.','_').' syntax/'.matchstr(s:type,'[^.]*').'.vim'
+  exe 'syn include @markdownHighlight_'.s:ft.' syntax/'.s:ft.'.vim'
   unlet! b:current_syntax
-  let s:done_include[matchstr(s:type,'[^.]*')] = 1
+  let s:done_include[s:ft] = 1
 endfor
-unlet! s:type
+unlet! s:ft
 unlet! s:done_include
 
 syn spell toplevel
@@ -127,13 +124,16 @@ syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 
 let s:done_include = {}
 for s:type in g:markdown_fenced_languages
-  if has_key(s:done_include, matchstr(s:type,'[^.]*'))
+  if has_key(s:done_include, s:type)
     continue
   endif
-  exe 'syn region markdownHighlight_'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','').' matchgroup=markdownCodeDelimiter start="^\s*\z(`\{3,\}\)\s*\%({.\{-}\.\)\='.matchstr(s:type,'[^=]*').'}\=\S\@!.*$" end="^\s*\z1\ze\s*$" keepend contains=@markdownHighlight_'.tr(matchstr(s:type,'[^=]*$'),'.','_') . s:concealends
-  exe 'syn region markdownHighlight_'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','').' matchgroup=markdownCodeDelimiter start="^\s*\z(\~\{3,\}\)\s*\%({.\{-}\.\)\='.matchstr(s:type,'[^=]*').'}\=\S\@!.*$" end="^\s*\z1\ze\s*$" keepend contains=@markdownHighlight_'.tr(matchstr(s:type,'[^=]*$'),'.','_') . s:concealends
-  let s:done_include[matchstr(s:type,'[^.]*')] = 1
+  let s:name = matchstr(s:type,'[^=]*')
+  let s:ft = matchstr(s:type,'[^=]*$')
+  exe 'syn region markdownHighlight_'.s:ft.' matchgroup=markdownCodeDelimiter start="^\s*\z(`\{3,\}\)\s*\%({.\{-}\.\)\='.s:name.'}\=\S\@!.*$" end="^\s*\z1\ze\s*$" keepend contains=@markdownHighlight_'.s:ft . s:concealends
+  exe 'syn region markdownHighlight_'.s:ft.' matchgroup=markdownCodeDelimiter start="^\s*\z(\~\{3,\}\)\s*\%({.\{-}\.\)\='.s:name.'}\=\S\@!.*$" end="^\s*\z1\ze\s*$" keepend contains=@markdownHighlight_'.s:ft . s:concealends
+  let s:done_include[s:type] = 1
 endfor
+unlet! s:name s:ft
 unlet! s:type
 unlet! s:done_include
 
