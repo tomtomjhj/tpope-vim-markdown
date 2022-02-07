@@ -116,6 +116,8 @@ exe 'syn region markdownStrike matchgroup=markdownStrikeDelimiter start="\~\~\S\
 
 syn region markdownCode matchgroup=markdownCodeDelimiter start="`" end="`\|^$" skip="``"
 syn region markdownCode matchgroup=markdownCodeDelimiter start="``" end="``\|^$" skip="```"
+syn region markdownCode matchgroup=markdownCodeDelimiter start="\$\S\@=" end="\S\@<=\$\|^$" skip="\\\$"
+syn region markdownCode matchgroup=markdownCodeDelimiter start="\$\$" end="\$\$\|^$" skip="\\\$"
 syn region markdownCodeBlock matchgroup=markdownCodeDelimiter start="\z(`\{3,\}\).*$" end="\z1\ze\s*$"
 syn region markdownCodeBlock matchgroup=markdownCodeDelimiter start="\z(\~\{3,\}\).*$" end="\z1\ze\s*$"
 
@@ -143,7 +145,7 @@ if get(b:, 'markdown_yaml_head', get(g:, 'markdown_yaml_head', main_syntax ==# '
   syn region markdownYamlHead start="\%^---$" end="^\%(---\|\.\.\.\)\s*$" keepend contains=@markdownYamlTop,@Spell
 endif
 
-syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
+syn match markdownEscape "\\[][\\`$*_{}()<>#+.!-]"
 
 hi def link markdownH1                    htmlH1
 hi def link markdownH2                    htmlH2
