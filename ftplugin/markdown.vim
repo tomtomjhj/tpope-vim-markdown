@@ -43,7 +43,7 @@ endfunction
 
 function! MarkdownFold() abort
   let line = getline(v:lnum)
-  let hashes = matchstr(line, '^#\+')
+  let hashes = matchstr(line, '^#\+\(\s\|$\)\@=')
   let is_code = -1
   if !empty(hashes)
     let is_code = s:IsCodeBlock(v:lnum)
